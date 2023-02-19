@@ -93,6 +93,7 @@ type options struct {
 	ErrorHandler   http.Handler
 	CookieName     string
 	TrustedOrigins []string
+	SetResponseHeader bool
 }
 
 // Protect is HTTP middleware that provides Cross-Site Request Forgery
@@ -301,6 +302,10 @@ func (cs *csrf) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Set the Vary: Cookie header to protect clients from caching the response.
 	w.Header().Add("Vary", "Cookie")
+	
+	if cs.opts.SetResponseHeader {
+		w.Header().Set(cs.opts.RequestHeader, Token(r))
+	}
 
 	// Call the wrapped handler/router on success.
 	cs.h.ServeHTTP(w, r)
