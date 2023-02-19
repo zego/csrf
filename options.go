@@ -131,6 +131,14 @@ func TrustedOrigins(origins []string) Option {
 	}
 }
 
+// SetResponseHeader will send additional response header if enable
+// header key is same as set in RequestHeader, default is X-Csrf-Token 
+func SetResponseHeader(s bool) Option {
+	return func(cs *csrf) {
+		cs.opts.SetResponseHeader = s
+	}
+}
+
 // setStore sets the store used by the CSRF middleware.
 // Note: this is private (for now) to allow for internal API changes.
 func setStore(s store) Option {
